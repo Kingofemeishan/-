@@ -261,7 +261,34 @@
   #dailyTag{position:absolute;left:-24px;right:-24px;bottom:-31px;text-align:center;font-size:11px;color:#0284c7;font-weight:700;pointer-events:none;white-space:nowrap;display:none;}
   #gacha.mode-daily #dailyTag{display:block;}
   #gacha.mode-daily #gachaModeTag{color:#0284c7;font-weight:700;}
-</style>
+  /* ===== 抽背小灯：单击按日期 / 双击按章节 选择抽背范围 ===== */
+  #gachaLamp{position:absolute;left:28%;top:-136px;transform:translateX(-50%);width:36px;height:36px;padding:0;border:none;background:transparent;cursor:pointer;z-index:71;display:flex;align-items:center;justify-content:center;}
+  #gachaLampImg{width:30px;display:block;filter:brightness(.74) saturate(.8);transition:filter .3s ease,transform .2s ease;}
+  #gachaLamp:hover #gachaLampImg{transform:translateY(-1px);}
+  #gachaLamp.on #gachaLampImg{filter:brightness(1.10) drop-shadow(0 0 10px rgba(129,212,250,.95));}
+  #gachaLampGlow{position:absolute;left:50%;top:22px;width:80px;height:150px;margin-left:-40px;border-radius:10px;background:linear-gradient(180deg,rgba(255,236,150,.55) 0%,rgba(255,236,150,.42) 26%,rgba(255,236,150,.24) 62%,rgba(255,236,150,.06) 88%,rgba(255,236,150,0) 100%);-webkit-clip-path:polygon(30% 0,70% 0,100% 100%,0 100%);clip-path:polygon(30% 0,70% 0,100% 100%,0 100%);opacity:0;pointer-events:none;transition:opacity .35s ease;filter:blur(2px);}
+  #gachaLamp.on #gachaLampGlow{opacity:1;animation:lampBreathe 2.8s ease-in-out infinite;}
+  @keyframes lampBreathe{0%,100%{opacity:.86;}50%{opacity:1;}}
+  #gachaLampTip{position:absolute;left:50%;transform:translateX(-50%);top:-14px;font-size:10px;color:#8d6e63;background:#fffdf5;border:1px solid #ffe0b2;border-radius:10px;padding:1px 8px;white-space:nowrap;display:none;pointer-events:none;}
+  #gachaLamp:hover #gachaLampTip{display:block;}
+
+  #lampPanel{position:fixed;left:16px;bottom:228px;width:306px;max-height:58vh;display:none;flex-direction:column;background:#fff;border-radius:16px;box-shadow:0 18px 46px rgba(0,0,0,.24);z-index:9996;padding:14px 16px;box-sizing:border-box;font-size:13px;color:#37474f;border:1px solid #eceff1;}
+  #lampPanel.show{display:flex;}
+  #lampPanelHead{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:4px;}
+  #lampPanelTitle{font-size:15px;font-weight:800;color:#263238;}
+  #lampPanelClose{border:none;background:transparent;font-size:18px;color:#90a4ae;cursor:pointer;padding:2px 6px;line-height:1;}
+  #lampPanelSub{font-size:11px;color:#90a4ae;margin-bottom:8px;line-height:1.5;}
+  #lampList{overflow:auto;flex:1 1 auto;margin:0 -4px;padding:0 4px;}
+  .lamp-opt{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;text-align:left;border:1px solid #e2e8f0;border-radius:10px;background:#fff;padding:9px 11px;margin-bottom:8px;cursor:pointer;font-family:inherit;font-size:13px;color:#37474f;}
+  .lamp-opt:hover{border-color:#ffb300;background:#fffdf5;}
+  .lamp-opt.on{border-color:#ffb300;background:#fff8e1;box-shadow:inset 0 0 0 2px rgba(255,213,79,.5);}
+  .lamp-opt .lo-main{font-weight:700;color:#263238;}
+  .lamp-opt .lo-sub{font-size:11px;color:#90a4ae;margin-top:2px;}
+  .lamp-opt .lo-num{font-size:11px;color:#0284c7;white-space:nowrap;}
+  #lampFoot{display:flex;gap:8px;margin-top:6px;}
+  #lampFoot button{flex:1 1 0;min-height:38px;border-radius:10px;font-size:12px;font-family:inherit;cursor:pointer;}
+  #lampClear{border:1px solid #e2e8f0;background:#fff;color:#64748b;}
+  #lampSwitch{border:1px solid #ffe0b2;background:#fffdf5;color:#b26a00;font-weight:700;}</style>
 
 <div id="gacha" aria-label="扭蛋机：随机抽取一个知识点">
   <div id="gachaCloud" role="button" tabindex="0" title="点击跳转到这个节点">
@@ -277,8 +304,21 @@
   <button id="gachaKid" type="button" title="单击：随机抽一个知识点；双击：切换 普通 → 不熟 → 真题 → 今日复习 模式"></button>
   <div id="gachaModeTag">普通模式 · 点我抽节点</div>
   <div id="dailyTag"></div>
-</div>
+  <button id="gachaLamp" type="button" title="单击：开灯并按日期抽背；双击：切换为按章节抽背">
+    <span id="gachaLampGlow"></span>
+    <img id="gachaLampImg" alt="抽背飞碟" src="data:image/webp;base64,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">
+    <span id="gachaLampTip">点灯 · 选复习范围</span>
+  </button></div>
 
+<div id="lampPanel" role="dialog" aria-label="选择抽背范围">
+  <div id="lampPanelHead"><span id="lampPanelTitle">🛸 按日期抽背</span><button id="lampPanelClose" type="button" title="关闭">×</button></div>
+  <div id="lampPanelSub"></div>
+  <div id="lampList"></div>
+  <div id="lampFoot">
+    <button id="lampClear" type="button">清除范围</button>
+    <button id="lampSwitch" type="button">改成按章节</button>
+  </div>
+</div>
 <div id="markMenu">
   <div class="mk-title">标记这个节点</div>
   <button type="button" data-mark="red"><span class="mk-dot" style="background:#e53935;"></span>不熟 · 标红</button>
@@ -313,35 +353,6 @@
   <div style="font-size:11px;color:#90a4ae;line-height:1.7;margin-bottom:12px;">背景图会压缩后保存在本机浏览器；数值越大内容区越白、越易读。</div>
   <button id="themeReset" type="button" style="width:100%;min-height:36px;border:1px solid #cfd8dc;border-radius:8px;background:#f5f7fa;color:#546e7a;font-size:13px;cursor:pointer;">恢复默认外观</button>
 </div>
-
-<script id="mindmap-deeplink-core">
-var MindmapDeepLink = (function(){
-  function normalize(value){
-    return String(value || '')
-      .replace(/^第[一二三四五六七八九十百零〇0-9]+章\s*/, '')
-      .replace(/^[一二三四五六七八九十]+[、.．]\s*/, '')
-      .replace(/^\d{1,3}[、.．]\s*/, '')
-      .replace(/[\s、，。：:；;（）()]/g, '').toLowerCase();
-  }
-  function findNodePath(root, point){
-    var target = normalize(point), best = null;
-    if(!target){ return null; }
-    function walk(node, path, depth){
-      if(!node){ return; }
-      var name = normalize(node.n), score = 0;
-      if(name === target){ score = 1000 - depth; }
-      else if(name && name.indexOf(target) >= 0){ score = 500 - depth * 3; }
-      else if(name && name.length >= 2 && target.indexOf(name) >= 0){ score = 250 - depth; }
-      if(depth === 0 && score){ score -= 80; }
-      if(score && (!best || score > best.score)){ best = { score: score, path: path }; }
-      (node.kids || []).forEach(function(child, index){ walk(child, path.concat(index), depth + 1); });
-    }
-    walk(root, [], 0);
-    return best ? best.path : null;
-  }
-  return { normalize: normalize, findNodePath: findNodePath };
-})();
-</script>
 
 <script>
 (function(){
@@ -2350,10 +2361,6 @@ var MindmapDeepLink = (function(){
     var pendingFocus = null;
     function openUserMap(id){
       var m = findMap(id);
-      if(!m && BUILTIN_MAPS.some(function(item){ return item.id === id; })){
-        ensureBuiltinMaps();
-        m = findMap(id);
-      }
       if(!m){
         window.location.hash = '';
         return;
@@ -2374,8 +2381,6 @@ var MindmapDeepLink = (function(){
       pendingFocus = null;
       if(fp){
         focusNodeByPath(fp);
-      } else if(focusRequestedNode()){
-        /* 真题网站深链已完成节点定位 */
       } else if(countNodes(m.data) <= 1 && ED.ctx && ED.ctx.nodes[0]){
         selectEdNode(ED.ctx.nodes[0]);
       }
@@ -2400,20 +2405,6 @@ var MindmapDeepLink = (function(){
         n.el.classList.add('gacha-hit');
         setTimeout(function(){ if(n && n.el){ n.el.classList.remove('gacha-hit'); } }, 2600);
       } catch(eC) { /* ignore */ }
-    }
-    function focusRequestedNode(){
-      if(!ED.map || !window.URLSearchParams){ return false; }
-      var params = new URLSearchParams(window.location.search || '');
-      var point = params.get('point');
-      if(!point){ return false; }
-      var path = MindmapDeepLink.findNodePath(ED.map.data, point);
-      if(path){
-        focusNodeByPath(path);
-        if(edSaveState){ edSaveState.textContent = '已定位到：' + point; }
-      } else if(edSaveState){
-        edSaveState.textContent = '本张导图中未找到「' + point + '」，请手动选择节点';
-      }
-      return true;
     }
 
     /* ---------- 右键标色：红=不熟，黄=真题考点 ---------- */
@@ -2877,7 +2868,7 @@ var MindmapDeepLink = (function(){
     }
     function spinGacha(){
       if(gachaBusy){ return; }
-      var pool = collectGachaPool();
+      var pool = lampApplyFilter(collectGachaPool());
       if(gachaMode === 'daily'){
         var todayIds = {};
         for(var ti=0;ti<maps.length;ti++){ if(dailyIsToday(maps[ti].created)){ todayIds[maps[ti].id] = 1; } }
@@ -2907,6 +2898,7 @@ var MindmapDeepLink = (function(){
       }
       if(!pool.length){
         var emptyText = '还没有可抽取的节点，先去建一张思维导图吧。';
+        if(lampFilter.type){ emptyText = (lampFilter.type === 'date' ? '这一天' : '这张导图') + '里没有可抽的知识点，换一个范围，或点灯清除范围。'; }
         if(gachaMode === 'red'){ emptyText = '还没有标红的节点。到导图里右键节点 →「不熟 · 标红」，再来抽。'; }
         if(gachaMode === 'yellow'){ emptyText = '还没有标黄的节点。到导图里右键节点 →「真题考点 · 标黄」，再来抽。'; }
         showGachaCloud({ text: emptyText, mapTitle: '', path: null });
@@ -2956,13 +2948,13 @@ var MindmapDeepLink = (function(){
         if(gachaMode === 'red'){ g.classList.add('mode-red'); }
         if(gachaMode === 'yellow'){ g.classList.add('mode-yellow'); }
         if(gachaMode === 'daily'){ g.classList.add('mode-daily'); }
+        if(gachaMode === 'daily' && typeof lampFilter !== 'undefined' && lampFilter && lampFilter.type){
+          lampFilter = { type: '', date: '', mapId: '' };
+          try { localStorage.setItem('mm_gacha_filter_v1', JSON.stringify(lampFilter)); } catch(eLF3) { /* ignore */ }
+        }
       }
-      var tag = document.getElementById('gachaModeTag');
-      if(tag){
-        tag.textContent = gachaMode === 'red' ? '不熟模式 · 只抽标红'
-          : (gachaMode === 'yellow' ? '真题模式 · 只抽标黄'
-          : (gachaMode === 'daily' ? '今日复习 · 只抽今天新建的导图' : '普通模式 · 点我抽节点'));
-      }
+      refreshGachaModeTag();
+
       try { localStorage.setItem('mm_gacha_mode', gachaMode); } catch(eGM2) { /* ignore */ }
       updateDailyUI();
     }
@@ -2990,6 +2982,193 @@ var MindmapDeepLink = (function(){
       });
     }
     applyGachaMode();
+    /* ===== 抽背小灯：单击按日期 / 双击按章节 选择抽背范围 ===== */
+    var LAMP_KEY = 'mm_gacha_filter_v1';
+    var lampFilter = { type: '', date: '', mapId: '' };
+    try {
+      var lfRaw = JSON.parse(localStorage.getItem(LAMP_KEY) || 'null');
+      if(lfRaw && lfRaw.type){ lampFilter = lfRaw; }
+    } catch(eLF) { lampFilter = { type: '', date: '', mapId: '' }; }
+    var lampView = 'date';
+    function lampSave(){ try { localStorage.setItem(LAMP_KEY, JSON.stringify(lampFilter)); } catch(eLS) { /* ignore */ } }
+    function lampDayKey(ts){
+      var d = new Date(ts || Date.now());
+      return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+    }
+    function lampDayLabel(key){
+      var p = String(key).split('-');
+      var d = new Date(+p[0], (+p[1]) - 1, +p[2]);
+      var wk = '日一二三四五六'.charAt(d.getDay());
+      return (+p[1]) + ' 月 ' + (+p[2]) + ' 日 · 周' + wk;
+    }
+    function lampMapById(mapId){
+      for(var i=0;i<maps.length;i++){ if(maps[i].id === mapId){ return maps[i]; } }
+      return null;
+    }
+    function lampPoolOfMap(mapId){
+      var all = collectGachaPool(), out = 0;
+      for(var i=0;i<all.length;i++){ if(all[i].mapId === mapId){ out++; } }
+      return out;
+    }
+    function lampApplyFilter(pool){
+      if(!lampFilter || !lampFilter.type){ return pool; }
+      var out = [];
+      if(lampFilter.type === 'date'){
+        var ids = {};
+        for(var i=0;i<maps.length;i++){ if(lampDayKey(maps[i].created) === lampFilter.date){ ids[maps[i].id] = 1; } }
+        for(var j=0;j<pool.length;j++){ if(ids[pool[j].mapId]){ out.push(pool[j]); } }
+        return out;
+      }
+      if(lampFilter.type === 'map'){
+        for(var k=0;k<pool.length;k++){ if(pool[k].mapId === lampFilter.mapId){ out.push(pool[k]); } }
+        return out;
+      }
+      return pool;
+    }
+    function lampSuffix(){
+      if(lampFilter.type === 'date'){ return ' · ' + lampFilter.date.slice(5).replace('-', '/'); }
+      if(lampFilter.type === 'map'){
+        var m = lampMapById(lampFilter.mapId);
+        var t = m ? (m.title || '未命名导图') : '已删除的导图';
+        if(t.length > 10){ t = t.slice(0, 10) + '…'; }
+        return ' · ' + t;
+      }
+      return '';
+    }
+    function refreshGachaModeTag(){
+      var tag = document.getElementById('gachaModeTag');
+      if(!tag){ return; }
+      var base = gachaMode === 'red' ? '不熟模式 · 只抽标红'
+        : (gachaMode === 'yellow' ? '真题模式 · 只抽标黄'
+        : (gachaMode === 'daily' ? '今日复习 · 只抽今天新建的导图' : '普通模式 · 点我抽节点'));
+      var lampSuf = (typeof lampFilter !== 'undefined' && lampFilter && lampFilter.type) ? lampSuffix() : '';
+      tag.textContent = base + lampSuf;
+    }
+    function lampSetOn(on){
+      var el = document.getElementById('gachaLamp');
+      if(el){ el.classList.toggle('on', !!on); }
+    }
+    function renderLampList(){
+      var list = document.getElementById('lampList');
+      var sub = document.getElementById('lampPanelSub');
+      var title = document.getElementById('lampPanelTitle');
+      var sw = document.getElementById('lampSwitch');
+      if(!list){ return; }
+      list.innerHTML = '';
+      if(sw){ sw.textContent = lampView === 'date' ? '改成按章节' : '改成按日期'; }
+      if(title){ title.textContent = lampView === 'date' ? '🛸 按日期抽背' : '🛸 按章节抽背'; }
+      if(!maps.length){
+        if(sub){ sub.textContent = '还没有导图。先建一张导图，再来选抽背范围。'; }
+        return;
+      }
+      var allPool = collectGachaPool();
+      if(lampView === 'date'){
+        var days = {}, dayNodes = {}, dayMaps = {}, mapDay = {};
+        for(var i=0;i<maps.length;i++){
+          var key = lampDayKey(maps[i].created);
+          days[key] = 1;
+          dayMaps[key] = (dayMaps[key] || 0) + 1;
+          mapDay[maps[i].id] = key;
+        }
+        for(var j=0;j<allPool.length;j++){
+          var kk = mapDay[allPool[j].mapId];
+          if(kk){ dayNodes[kk] = (dayNodes[kk] || 0) + 1; }
+        }
+        if(sub){ sub.textContent = '选一天，就只抽那一天新建的导图里的知识点。'; }
+        var keys = Object.keys(days).sort().reverse();
+        for(var a=0;a<keys.length;a++){
+          (function(key){
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'lamp-opt' + ((lampFilter.type === 'date' && lampFilter.date === key) ? ' on' : '');
+            var n = dayNodes[key] || 0;
+            btn.innerHTML = '<div><div class="lo-main">' + lampDayLabel(key) + '</div>' +
+              '<div class="lo-sub">' + (dayMaps[key] || 0) + ' 张导图 · ' + n + ' 个知识点</div></div>' +
+              '<span class="lo-num">' + (n ? '抽这天' : '无节点') + '</span>';
+            btn.addEventListener('click', function(){
+              lampFilter = { type: 'date', date: key, mapId: '' };
+              if(gachaMode === 'daily'){ gachaMode = 'all'; }
+              lampSave(); applyGachaMode(); closeLampPanel();
+              spinGacha();
+            });
+            list.appendChild(btn);
+          })(keys[a]);
+        }
+      } else {
+        if(sub){ sub.textContent = '选一张导图（章节），就只抽这一章里的知识点。'; }
+        var rows = maps.slice().sort(function(x, y){ return (y.created || 0) - (x.created || 0); });
+        for(var b=0;b<rows.length;b++){
+          (function(m){
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'lamp-opt' + ((lampFilter.type === 'map' && lampFilter.mapId === m.id) ? ' on' : '');
+            var n2 = lampPoolOfMap(m.id);
+            btn.innerHTML = '<div><div class="lo-main">' + (m.title || '未命名导图') + '</div>' +
+              '<div class="lo-sub">' + lampDayLabel(lampDayKey(m.created)) + '</div></div>' +
+              '<span class="lo-num">' + n2 + ' 个</span>';
+            btn.addEventListener('click', function(){
+              lampFilter = { type: 'map', mapId: m.id, date: '' };
+              if(gachaMode === 'daily'){ gachaMode = 'all'; }
+              lampSave(); applyGachaMode(); closeLampPanel();
+              spinGacha();
+            });
+            list.appendChild(btn);
+          })(rows[b]);
+        }
+      }
+    }
+    function openLampPanel(view){
+      if(view){ lampView = view; }
+      var p = document.getElementById('lampPanel');
+      if(!p){ return; }
+      renderLampList();
+      p.classList.add('show');
+      lampSetOn(true);
+    }
+    function closeLampPanel(){
+      var p = document.getElementById('lampPanel');
+      if(p){ p.classList.remove('show'); }
+      lampSetOn(!!lampFilter.type || (p && p.classList.contains('show')));
+    }
+    function toggleLampPanel(){
+      var p = document.getElementById('lampPanel');
+      if(p && p.classList.contains('show')){ closeLampPanel(); }
+      else { openLampPanel(lampView); }
+    }
+    var lampBtnEl = document.getElementById('gachaLamp');
+    var lampTapTimer = null;
+    if(lampBtnEl){
+      lampBtnEl.addEventListener('click', function(){
+        if(lampTapTimer){ clearTimeout(lampTapTimer); lampTapTimer = null; return; }
+        lampTapTimer = setTimeout(function(){ lampTapTimer = null; toggleLampPanel(); }, 240);
+      });
+      lampBtnEl.addEventListener('dblclick', function(){
+        if(lampTapTimer){ clearTimeout(lampTapTimer); lampTapTimer = null; }
+        openLampPanel(lampView === 'date' ? 'map' : 'date');
+      });
+    }
+    var lampSwitchEl = document.getElementById('lampSwitch');
+    if(lampSwitchEl){
+      lampSwitchEl.addEventListener('click', function(){ openLampPanel(lampView === 'date' ? 'map' : 'date'); });
+    }
+    var lampCloseEl = document.getElementById('lampPanelClose');
+    if(lampCloseEl){ lampCloseEl.addEventListener('click', function(){ closeLampPanel(); }); }
+    var lampClearEl = document.getElementById('lampClear');
+    if(lampClearEl){
+      lampClearEl.addEventListener('click', function(){
+        lampFilter = { type: '', date: '', mapId: '' };
+        lampSave(); refreshGachaModeTag(); closeLampPanel(); lampSetOn(false);
+        showGachaCloud({ text: '已清除抽背范围，恢复为全库抽取。', mapTitle: '', path: null });
+      });
+    }
+    document.addEventListener('click', function(ev){
+      var p = document.getElementById('lampPanel');
+      if(!p || !p.classList.contains('show')){ return; }
+      if(p.contains(ev.target) || (lampBtnEl && lampBtnEl.contains(ev.target))){ return; }
+      closeLampPanel();
+    });
+    refreshGachaModeTag();
+    lampSetOn(!!lampFilter.type);
     var dailyBarBtnEl = document.getElementById('dailyBarBtn');
     if(dailyBarBtnEl){
       dailyBarBtnEl.addEventListener('click', function(){
